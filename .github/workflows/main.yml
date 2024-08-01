@@ -20,5 +20,5 @@ jobs:
 
       - name: Deploy website via SSH
         run: |
-          scp -o StrictHostKeyChecking=no -r ./* root@54.254.204.223:/www/wwwroot/kdjmatta.run.place
-          ssh -o StrictHostKeyChecking=no root@54.254.204.223 'touch /www/wwwroot/kdjmatta.run.place/$(date +"%Y-%m-%d_%H-%M-%S").txt'
+          scp -o StrictHostKeyChecking=no -r ./* root@54.254.204.223:/www/wwwroot/prokcd.run.place
+          ssh -o StrictHostKeyChecking=no root@54.254.204.223 'touch /www/wwwroot/prokcd.run.place/$(date +"%Y-%m-%d_%H-%M-%S").txt'
