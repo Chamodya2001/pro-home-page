@@ -16,23 +16,27 @@ jobs:
     - name: Install SSH Client
       run: sudo apt-get install -y sshpass
 
-    - name: Copy files to server
+    - name: Setup SSH
       env:
         SSH_PRIVATE_KEY: ${{ secrets.PROKCD }}
-        SERVER_USER: ubuntu
         SERVER_IP: 54.254.204.223
-        SERVER_DIR: /www/wwwroot/prokcd.run.place
       run: |
         mkdir -p ~/.ssh
         echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan 54.254.204.223 >> ~/.ssh/known_hosts
-        rsync -avz -e "ssh -i ~/.ssh/id_rsa" ./ $SERVER_USER@$SERVER_IP:$SERVER_DIR
+
+    - name: Copy files to server
+      env:
+        SERVER_USER: root
+        SERVER_IP: 54.254.204.223
+        SERVER_DIR: /www/wwwroot/prokcd.run.place
+      run: |
+        rsync -avz --delete -e "ssh -i ~/.ssh/id_rsa" ./ $SERVER_USER@$SERVER_IP:$SERVER_DIR
 
     - name: Restart server (optional)
       env:
-        SSH_PRIVATE_KEY: ${{ secrets.PROKCD }}
-        SERVER_USER: ubuntu
+        SERVER_USER: root
         SERVER_IP: 54.254.204.223
       run: |
         ssh -i ~/.ssh/id_rsa $SERVER_USER@$SERVER_IP 'sudo systemctl restart your_web_server_service'
