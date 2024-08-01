@@ -1,42 +1,24 @@
-name: Deploy HTML Website
+name: Deploy Website
 
 on:
   push:
     branches:
-      - main
+      - main  # Change this to your main branch name
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Install SSH Client
-      run: sudo apt-get install -y sshpass
+      - name: Install SSH key
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.PROKCD }}
 
-    - name: Setup SSH
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.PROKCD }}
-        SERVER_IP: 54.254.204.223
-      run: |
-        mkdir -p ~/.ssh
-        echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan 54.254.204.223 >> ~/.ssh/known_hosts
-
-    - name: Copy files to server
-      env:
-        SERVER_USER: root
-        SERVER_IP: 54.254.204.223
-        SERVER_DIR: /www/wwwroot/prokcd.run.place
-      run: |
-        rsync -avz --delete -e "ssh -i ~/.ssh/id_rsa" ./root@54.254.204.223:$SERVER_DIR
-
-    - name: Restart server (optional)
-      env:
-        SERVER_USER: root
-        SERVER_IP: 54.254.204.223
-      run: |
-        ssh -i ~/.ssh/id_rsa root@54.254.204.223 'sudo systemctl restart your_web_server_service'
+      - name: Deploy website via SSH
+        run: |
+          scp -o StrictHostKeyChecking=no -r ./* root@54.254.204.223:/www/wwwroot/kdjmatta.run.place
+          ssh -o StrictHostKeyChecking=no root@54.254.204.223 'touch /www/wwwroot/kdjmatta.run.place/$(date +"%Y-%m-%d_%H-%M-%S").txt'
