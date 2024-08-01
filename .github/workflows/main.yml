@@ -32,11 +32,11 @@ jobs:
         SERVER_IP: 54.254.204.223
         SERVER_DIR: /www/wwwroot/prokcd.run.place
       run: |
-        rsync -avz --delete -e "ssh -i ~/.ssh/id_rsa" ./ $SERVER_USER@$SERVER_IP:$SERVER_DIR
+        rsync -avz --delete -e "ssh -i ~/.ssh/id_rsa" ./root@54.254.204.223:$SERVER_DIR
 
     - name: Restart server (optional)
       env:
         SERVER_USER: root
         SERVER_IP: 54.254.204.223
       run: |
-        ssh -i ~/.ssh/id_rsa $SERVER_USER@$SERVER_IP 'sudo systemctl restart your_web_server_service'
+        ssh -i ~/.ssh/id_rsa root@54.254.204.223 'sudo systemctl restart your_web_server_service'
