@@ -18,7 +18,7 @@ jobs:
 
     - name: Copy files to server
       env:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        SSH_PRIVATE_KEY: ${{ secrets.PROKCD }}
         SERVER_USER: ubuntu
         SERVER_IP: 54.254.204.223
         SERVER_DIR: /www/wwwroot/prokcd.run.place
